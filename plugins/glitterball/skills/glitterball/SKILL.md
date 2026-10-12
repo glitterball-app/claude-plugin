@@ -9,9 +9,15 @@ Glitterball plays recorded walkthroughs over a live prototype and lets people co
 like Vercel Analytics or Sentry: install the `glitterball` package with the project's own package manager, then
 render it once where every page renders. It works the same with npm, pnpm, Yarn or Bun.
 
+What it sends, so the user knows before you change anything: on page load it loads its script from
+www.glitterball.dev and reads the prototype's list of walkthroughs; it records and uploads only after
+someone presses Record on its bar, to the workspace of whoever signs in there. The token (`tt_…`) is a
+public site key, like an analytics ID: it ships in the page, so it can go straight into the source.
+
 ## Steps
 
-1. Get the prototype's token. One HTTPS request; it touches no files:
+1. Get the prototype's token. One HTTPS request that sends only the name and creates an unclaimed tag;
+   nothing from the project leaves the machine:
 
    ```sh
    curl -fsS -X POST https://www.glitterball.dev/api/cli/tag -H 'Content-Type: application/json' -d '{"name":"<Prototype name>"}'
@@ -19,11 +25,11 @@ render it once where every page renders. It works the same with npm, pnpm, Yarn 
 
    It answers `{ "token", "prototype", "package", "snippet" }`. Pick the name from what the user called the
    prototype, else from package.json. If the user already gave a tag token (`tt_…`, from Connect prototype
-   in Glitterball), use it, and run the request anyway for `package` (or install the URL in the answer to it).
+   in Glitterball), use it, and install `glitterball`.
 
 2. Install `package` with the project's package manager, the one its lockfile belongs to:
-   `npm install <package>`, `pnpm add <package>`, `yarn add <package>` or `bun add <package>`. Until
-   `glitterball` is on npm, `package` is a tarball URL that Glitterball serves; it lands in package.json as `glitterball`.
+   `npm install <package>`, `pnpm add <package>`, `yarn add <package>` or `bun add <package>`. It is
+   `glitterball` on npm.
 
 3. Add Glitterball once, where every page renders, with `token` and `prototype`:
 
@@ -38,14 +44,14 @@ render it once where every page renders. It works the same with npm, pnpm, Yarn 
    already there (a `glitterball` or `aberra` import or a script whose `src` ends in `/tag.js`), update its token instead
    of adding another.
 
-4. Build or typecheck the prototype to make sure it compiles, and show the user the diff.
+4. Check it compiles with the project's own typecheck or build, and show the user the diff.
 
 5. Tell the user: run or deploy it, then open the prototype and press Record on the Glitterball bar in its
    corner. The first time, that signs them in and sets the prototype up in their workspace; then they
    record.
 
 A person at a terminal can instead run
-`npx -y https://www.glitterball.dev/api/install/aberra-tag.tgz init`, which puts the script tag in
+`npx -y glitterball init`, which puts the script tag in
 `<head>` for them (add `--dry-run` to see what it would do first).
 
 ## Sharing a prototype for feedback
@@ -63,7 +69,7 @@ answers to their questions, by screen, so you can work through them.
 ## Notes
 
 - If the repo's changes are reviewed in GitHub pull requests with preview deploys (Vercel, Netlify), offer
-  `npx -y https://www.glitterball.dev/api/install/aberra-tag.tgz github`. It adds a workflow that
+  `npx -y glitterball github`. It adds a workflow that
   comments on each pull request when its preview is ready, pointing reviewers at the preview with the
   Glitterball bar on it. It needs no secrets.
 - `data-build` tells Glitterball which version a page is, so walkthroughs recorded on an older build play as
@@ -78,50 +84,50 @@ answers to their questions, by screen, so you can work through them.
 People rarely open the Glitterball web app; do these here instead. They need a workspace key once:
 
 ```sh
-npx -y https://www.glitterball.dev/api/install/aberra-tag.tgz login
+npx -y glitterball login
 ```
 
 It opens Glitterball in the browser for the user to allow, like init (same code check, long timeout). The key
 is kept in `~/.config/aberra/credentials.json`. If a command says "Not logged in" or the key wasn't
-accepted, run login again. Below, `aberra-tag` stands for
-`npx -y https://www.glitterball.dev/api/install/aberra-tag.tgz`.
+accepted, run login again. Below, `glitterball` stands for
+`npx -y glitterball`.
 
 ## Act on feedback
 
 When the user asks what people said, or to fix what reviewers asked for:
 
-1. `aberra-tag feedback "<Prototype name>"` prints it as Markdown, grouped by screen: open comments
+1. `glitterball feedback "<Prototype name>"` prints it as Markdown, grouped by screen: open comments
    (each with its id), answers to the walkthrough's questions with the moment they were asked, a summary
    of the answers, and the recorder's narration. `--all` covers every version.
 2. Make the changes in this codebase, screen by screen. Keep them small and say which comment each
    answers.
-3. For each comment you dealt with: `aberra-tag resolve <comment id>`.
+3. For each comment you dealt with: `glitterball resolve <comment id>`.
 4. Tell the user to deploy and record a short walkthrough of the new version, so reviewers can check it.
 
 ## What's in the workspace
 
-`aberra-tag prototypes` lists the workspace's prototypes: where each runs, its newest walkthrough (who
+`glitterball prototypes` lists the workspace's prototypes: where each runs, its newest walkthrough (who
 recorded it, how long, how many watched) and the link to share it. Use it to find the name to pass to
 `feedback`, or when the user asks for a walkthrough's link. You never need to send them to the dashboard
 for this.
 
 ## The team
 
-`aberra-tag team` shows who is on the workspace, the invites still waiting and the seats left.
-`aberra-tag invite <email>` (add `--admin` for an admin) invites someone and prints a join code with a
+`glitterball team` shows who is on the workspace, the invites still waiting and the seats left.
+`glitterball invite <email>` (add `--admin` for an admin) invites someone and prints a join code with a
 line to send them; Glitterball emails it too when it can. Only a workspace owner or admin can invite, and a
 personal workspace has one seat.
 
 ## Who watched
 
-`aberra-tag activity` lists who watched the workspace's walkthroughs (and how far), commented and
+`glitterball activity` lists who watched the workspace's walkthroughs (and how far), commented and
 reacted, newest first. Use it when the user asks whether anyone has looked at what they shared.
 
 ## Slack
 
 To get Glitterball's notifications (comments, answers, new walkthroughs, people watching to the end) in a
 Slack channel, ask the user for an incoming webhook URL: in Slack, add the **Incoming Webhooks** app to
-the channel and copy its URL. Then `aberra-tag slack connect <url>` (it sends a test message);
-`aberra-tag slack status`, `slack test` and `slack off` do what they say. Only a workspace owner or
+the channel and copy its URL. Then `glitterball slack connect <url>` (it sends a test message);
+`glitterball slack status`, `slack test` and `slack off` do what they say. Only a workspace owner or
 admin can connect it. Whoever recorded a walkthrough also gets these by email.
 
