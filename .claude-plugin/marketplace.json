@@ -1,0 +1,18 @@
+{
+  "name": "glitterball",
+  "owner": {
+    "name": "Glitterball"
+  },
+  "metadata": {
+    "description": "Glitterball for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "glitterball",
+      "description": "Glitterball in Claude Code: /glitterball adds Glitterball to a prototype, reads what people said about it so you can fix it, shows who watched, and connects Slack",
+      "version": "0.2.0",
+      "source": "./plugins/glitterball",
+      "category": "productivity"
+    }
+  ]
+}
