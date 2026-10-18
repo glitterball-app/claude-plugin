@@ -1,11 +1,11 @@
 ---
 name: glitterball
-description: Use Glitterball (formerly Aberra) from Claude Code. Add it to a prototype so walkthroughs can be recorded and played over it; read what people said about a prototype (comments, answers to walkthrough questions) and fix it; see who watched a walkthrough; send Glitterball notifications to Slack. Use when the user asks to add, connect or install Glitterball or wants to share a prototype with stakeholders for review or feedback, or mentions Glitterball, the Glitterball tag, walkthroughs, prototype feedback or comments, who watched, or Glitterball in Slack.
+description: Add interactive video walkthroughs to a prototype with Glitterball, so you can record a guided walkthrough that plays over the live prototype and share it by link. Also reads what people said about a prototype (comments, answers to walkthrough questions) so you can fix it, shows who watched a walkthrough, and sends Glitterball notifications to Slack. Use when the user asks to add, connect or install Glitterball, wants to walk stakeholders through a prototype, or mentions Glitterball, the Glitterball tag, walkthroughs, prototype feedback or comments, who watched, or Glitterball in Slack.
 ---
 
 # Add Glitterball to this prototype
 
-Glitterball plays recorded walkthroughs over a live prototype and lets people comment on it. A prototype gets it
+Glitterball plays interactive video walkthroughs over a live prototype and lets people comment on it. A prototype gets it
 like Vercel Analytics or Sentry: install the `glitterball` package with the project's own package manager, then
 render it once where every page renders. It works the same with npm, pnpm, Yarn or Bun.
 
@@ -63,7 +63,7 @@ it while talking, can stop at a moment to ask viewers a question, and the link t
 own URL with the walkthrough playing over it. Viewers don't need an account. If Glitterball isn't on the
 prototype yet, offer to add it with the steps above first.
 
-When they come back for changes, the Aberra MCP server's `get_feedback` returns the comments and the
+When they come back for changes, the Glitterball MCP server's `get_feedback` returns the comments and the
 answers to their questions, by screen, so you can work through them.
 
 ## Notes
